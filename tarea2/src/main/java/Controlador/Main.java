@@ -1,20 +1,30 @@
 package Controlador;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
-
+import DAO.PlantaDAO;
+import DAO.PlantaDAOImpl;
 import modelo.Credenciales;
 import modelo.Planta;
 
 public class Main {
-
-	// Credenciales del administrador
-    private static final String USUARIO_ADMIN = "admin";
-    private static final String CONTRASEÑA_ADMIN = "admin";
+	 // Establecer conexión a la base de datos
+    private static String jdbcUrl = "jdbc:mysql://localhost:3306/tarea2_juan";
+    private static String jdbcUser = "root";
+    private static String jdbcPassword = "";
+	
+	
+	
+	
+	
+	
+	
+	
+	
     
     // Lista para almacenar credenciales de los usuarios
     private static List<Credenciales> listaCredenciales = new ArrayList<Credenciales>();
@@ -63,11 +73,21 @@ public class Main {
 
     // CU1: Ver listado de plantas
     private static void verPlantas() {
-        // Sort the list of plants alphabetically
-        System.out.println("\nListado de plantas (alfabéticamente):");
-        for (Planta planta : listaPlantas) {
-            System.out.println(planta.toString());
-        }
+        
+        //saco la lista de plantas
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPassword)) {
+            PlantaDAO plantaDAO = new PlantaDAOImpl(connection);
+
+            // Listar todas las plantas
+            System.out.println("Listando plantas:");
+            List<Planta> plantas = plantaDAO.listarPlantas();
+            for (Planta planta : plantas) {
+                System.out.println(planta.getCodigo() + " - " + planta.getNombreComun() + " - " + planta.getNombreCientifico());
+            }
+        } catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     // CU2: Login for user authentication
@@ -77,33 +97,27 @@ public class Main {
         String username = scanner.nextLine();
         
         // Check for admin login
-        if (username.equals(USUARIO_ADMIN)) {
-            System.out.print("Ingrese su contraseña: ");
-            String password = scanner.nextLine();
-            if (password.equals(CONTRASEÑA_ADMIN)) {
-            	usuario = "admin";
-                System.out.println("Autenticado como Admin. Acceso completo otorgado.");
-                showAdminMenu(scanner);
-            } else {
-                System.out.println("Contraseña incorrecta para Admin. Acceso denegado.");
-            }
-        } 
-        // Check for personnel login
-//        else if (listaCredenciales.contains(Credenciales.) {
-//            System.out.print("Ingrese su contraseña: ");
-//            String password = scanner.nextLine();
-//            if (listaCredenciales.get(username).equals(password)) {
-//            	usuario = "personal";
-//                System.out.println("Autenticado como Personal. Acceso a funcionalidades del personal otorgado.");
-//                showPersonnelMenu(scanner);
-//            } else {
-//                System.out.println("Contraseña incorrecta. Acceso denegado.");
+        
+//        try (Connection connection = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPassword)) {
+//            PlantaDAO plantaDAO = new PlantaDAOImpl(connection);
+//
+//            // Listar todas las plantas
+//            System.out.println("Listando plantas:");
+//            List<Planta> plantas = plantaDAO.listarPlantas();
+//            for (Planta planta : plantas) {
+//                System.out.println(planta.getCodigo() + " - " + planta.getNombreComun() + " - " + planta.getNombreCientifico());
 //            }
-//        } 
+//        } catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+        
+        // Check for password
+        
+        
         // Unknown user
-        else {
-            System.out.println("Usuario no reconocido. Acceso denegado.");
-        }
+
+        
     }
 
     // Menu for Admin (full access)
