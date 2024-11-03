@@ -1,8 +1,6 @@
 package modelo;
 
-import java.util.List;
-
-public class Planta {
+public class Planta implements Comparable<Planta> {
 	private String codigo;
 	private String nombreComun;
 	private String nombreCientifico;
@@ -40,6 +38,15 @@ public class Planta {
 	
 	public void setNombreCientifico(String nombreCientifico) {
 		this.nombreCientifico = nombreCientifico;
+	}
+
+	@Override
+	public int compareTo(Planta o) {
+		if (this.nombreComun.compareTo(o.nombreComun) == 0)
+	      {
+	         return this.nombreComun.compareTo(o.nombreComun);
+	      }
+	      else return this.nombreComun.compareTo(o.nombreComun);
 	}
 	
 }
