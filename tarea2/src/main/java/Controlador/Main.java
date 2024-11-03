@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
 import DAO.PlantaDAO;
-import DAO.PlantaDAOImpl;
+import DAOImpl.CredencialesDAOImpl;
+import DAOImpl.PlantaDAOImpl;
 import DAO.CredencialesDAO;
-import DAO.CredencialesDAOImpl;
 import modelo.Credenciales;
 import modelo.Planta;
 

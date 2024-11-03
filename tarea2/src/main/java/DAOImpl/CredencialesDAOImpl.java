@@ -1,9 +1,11 @@
-package DAO;
+package DAOImpl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import DAO.CredencialesDAO;
 
 public class CredencialesDAOImpl implements CredencialesDAO {
     private Connection connection;
