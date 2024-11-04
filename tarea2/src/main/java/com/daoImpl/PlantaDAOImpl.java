@@ -1,11 +1,11 @@
-package DAOImpl;
+package com.daoImpl;
 
-import modelo.Planta;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import DAO.PlantaDAO;
+import com.dao.PlantaDAO;
+import com.model.Planta;
 
 public class PlantaDAOImpl implements PlantaDAO {
     private Connection connection;

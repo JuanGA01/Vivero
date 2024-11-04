@@ -1,13 +1,14 @@
-package DAOImpl;
+package com.daoImpl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import DAO.CredencialesDAO;
+import com.dao.CredencialesDAO;
 
 public class CredencialesDAOImpl implements CredencialesDAO {
+	
     private Connection connection;
 
     // Constructor que toma una conexión
@@ -31,7 +32,7 @@ public class CredencialesDAOImpl implements CredencialesDAO {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+        	System.out.println("Error al autenticar al usuario " + e.getMessage());
         }
         return false; // Si ocurre un error o no se encuentra el usuario, retorna false
     }

@@ -1,4 +1,4 @@
-package modelo;
+package com.model;
 
 public class Persona {
 	private Long id;

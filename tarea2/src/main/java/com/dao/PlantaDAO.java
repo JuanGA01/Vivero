@@ -1,7 +1,8 @@
-package DAO;
+package com.dao;
 
 import java.util.List;
-import modelo.Planta;
+
+import com.model.Planta;
 
 public interface PlantaDAO {
     // Método para listar todas las plantas

@@ -1,4 +1,4 @@
-package modelo;
+package com.model;
 
 public class Credenciales {
 	private Long id;

@@ -1,4 +1,4 @@
-package Controlador;
+package main;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -10,12 +10,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
-import DAO.PlantaDAO;
-import DAOImpl.CredencialesDAOImpl;
-import DAOImpl.PlantaDAOImpl;
-import DAO.CredencialesDAO;
-import modelo.Credenciales;
-import modelo.Planta;
+
+import com.dao.CredencialesDAO;
+import com.dao.PlantaDAO;
+import com.daoImpl.CredencialesDAOImpl;
+import com.daoImpl.PlantaDAOImpl;
+import com.model.Credenciales;
+import com.model.Planta;
 
 public class Main {
 	 // Establecer conexión a la base de datos

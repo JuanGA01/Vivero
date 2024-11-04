@@ -1,4 +1,4 @@
-package modelo;
+package com.model;
 
 public class Planta implements Comparable<Planta> {
 	private String codigo;

@@ -1,4 +1,4 @@
-package DAO;
+package com.dao;
 
 public interface CredencialesDAO {
     // Método para verificar si un usuario y contraseña son válidos
