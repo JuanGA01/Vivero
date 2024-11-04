@@ -40,7 +40,6 @@ public class MySqlDAOFactory {
 			// obtengo la conexion
 			 connection = m.getConnection();
 
-
 		} catch (FileNotFoundException e) {
 			System.out.println("Error al acceder al fichero properties " + e.getMessage());
 		} catch (IOException e) {
