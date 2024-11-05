@@ -3,11 +3,11 @@ package com.daoImpl;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.dao.PlantaDAO;
 import com.model.Planta;
 
 public class PlantaDAOImpl implements PlantaDAO {
+	
     private Connection connection;
 
     // Constructor que toma una conexión
@@ -85,4 +85,5 @@ public class PlantaDAOImpl implements PlantaDAO {
         }
         return false;
     }
+    
 }

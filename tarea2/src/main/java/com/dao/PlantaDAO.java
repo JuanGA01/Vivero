@@ -4,6 +4,7 @@ import java.util.List;
 import com.model.Planta;
 
 public interface PlantaDAO {
+	
     // Método para listar todas las plantas
     List<Planta> listarPlantas();
 
@@ -12,4 +13,5 @@ public interface PlantaDAO {
 
     // Método para crear una nueva planta, validando que el código sea único
     boolean crearPlanta(Planta planta);
+    
 }

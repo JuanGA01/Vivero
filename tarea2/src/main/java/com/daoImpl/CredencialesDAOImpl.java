@@ -10,11 +10,12 @@ import com.dao.CredencialesDAO;
 public class CredencialesDAOImpl implements CredencialesDAO {
 	
     private Connection connection;
-
+    
     // Constructor que toma una conexión
     public CredencialesDAOImpl(Connection connection) {
         this.connection = connection;
     }
+
 
     // Implementación del método para verificar si las credenciales son correctas
     @Override
@@ -36,5 +37,23 @@ public class CredencialesDAOImpl implements CredencialesDAO {
         }
         return false; // Si ocurre un error o no se encuentra el usuario, retorna false
     }
+
+    // Implementación del método para crear un usuario
+    @Override
+    public boolean crearUsuario(String usuario, String password) {
+        String insertUserSql = "INSERT INTO Credenciales (usuario, password) VALUES (?, ?)";
+
+        try (PreparedStatement insertStatement = connection.prepareStatement(insertUserSql)) {
+            insertStatement.setString(1, usuario);
+            insertStatement.setString(2, password);
+            
+            int rowsInserted = insertStatement.executeUpdate();
+            return rowsInserted > 0; // Retorna true si se insertó al menos una fila
+        } catch (SQLException e) {
+            System.out.println("Error al crear el usuario: " + e.getMessage());
+        }
+        return false; // Retorna false si ocurre algún error
+    }
+
     
 }
