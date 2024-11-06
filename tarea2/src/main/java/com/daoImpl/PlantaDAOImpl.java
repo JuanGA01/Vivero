@@ -35,16 +35,25 @@ public class PlantaDAOImpl implements PlantaDAO {
         return plantas;
     }
 
-	@Override
-	public void insert(Planta planta) throws SQLException {
-	    String sql = "INSERT INTO Planta (codigo, nombrecomun, nombrecientifico) VALUES (?, ?, ?)";
-	    try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-	        preparedStatement.setString(1, planta.getCodigo());
-	        preparedStatement.setString(2, planta.getNombreComun());
-	        preparedStatement.setString(3, planta.getNombreCientifico());
-	        preparedStatement.executeUpdate();
-	    }
-	}
+    @Override
+    public boolean insert(Planta planta) {
+        String sql = "INSERT INTO Planta (codigo, nombrecomun, nombrecientifico) VALUES (?, ?, ?)";
+        
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, planta.getCodigo());
+            preparedStatement.setString(2, planta.getNombreComun());
+            preparedStatement.setString(3, planta.getNombreCientifico());
+            
+            int rowsInserted = preparedStatement.executeUpdate();
+            return rowsInserted > 0; // Retorna true si se insertó al menos una fila
+        } catch (SQLException e) {
+            System.out.println("Error al insertar la planta: " + e.getMessage());
+        }
+        
+        return false; // Retorna false si ocurre algún error
+    }
+
+
 
 	@Override
 	public Planta findById(String codigo) throws SQLException {
@@ -64,24 +73,37 @@ public class PlantaDAOImpl implements PlantaDAO {
 	}
 
 	@Override
-	public void update(Planta planta) throws SQLException {
+	public boolean update(Planta planta) {
 	    String sql = "UPDATE Planta SET nombrecomun = ?, nombrecientifico = ? WHERE codigo = ?";
+	    
 	    try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 	        preparedStatement.setString(1, planta.getNombreComun());
 	        preparedStatement.setString(2, planta.getNombreCientifico());
 	        preparedStatement.setString(3, planta.getCodigo());
-	        preparedStatement.executeUpdate();
+	        
+	        int rowsUpdated = preparedStatement.executeUpdate();
+	        return rowsUpdated > 0; // Retorna true si se actualizó al menos una fila
+	    } catch (SQLException e) {
+	        System.out.println("Error al actualizar la planta: " + e.getMessage());
 	    }
+	    
+	    return false; // Retorna false si ocurre algún error
 	}
 
 	@Override
-	public void delete(String codigo) throws SQLException {
+	public boolean delete(String codigo) {
 	    String sql = "DELETE FROM Planta WHERE codigo = ?";
+	    
 	    try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 	        preparedStatement.setString(1, codigo);
-	        preparedStatement.executeUpdate();
+	        
+	        int rowsDeleted = preparedStatement.executeUpdate();
+	        return rowsDeleted > 0; // Retorna true si se eliminó al menos una fila
+	    } catch (SQLException e) {
+	        System.out.println("Error al eliminar la planta: " + e.getMessage());
 	    }
+	    
+	    return false; // Retorna false si ocurre algún error
 	}
-
     
 }

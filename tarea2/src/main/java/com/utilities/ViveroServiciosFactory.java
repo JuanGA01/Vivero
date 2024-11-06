@@ -1,8 +1,10 @@
 package com.utilities;
 
 import com.services.ServicioCredenciales;
+import com.services.ServicioPersona;
 import com.services.ServicioPlanta;
 import servicesImpl.ServicioCredencialesImpl;
+import servicesImpl.ServicioPersonaImpl;
 import servicesImpl.ServicioPlantaImpl;
 
 public class ViveroServiciosFactory {
@@ -21,6 +23,8 @@ public class ViveroServiciosFactory {
 	public ServicioCredenciales getServiciosCredenciales() {
 		return new ServicioCredencialesImpl();
 	}
-	
+	public ServicioPersona getServiciosPersona() {
+		return new ServicioPersonaImpl();
+	}
 
 }

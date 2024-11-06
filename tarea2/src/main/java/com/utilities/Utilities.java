@@ -5,9 +5,19 @@ import java.time.LocalDate;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import com.model.Persona;
+
 public class Utilities {
 	
+	// Método para validar correo
+	public static boolean ValidEmail(String email) {
+        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
+        return email != null && email.matches(emailRegex);
+    }
+	
 
+	
+	
     public static boolean leerBoolean() {
         boolean ret;
         Scanner in;

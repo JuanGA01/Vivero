@@ -28,4 +28,39 @@ public class ServicioPlantaImpl implements ServicioPlanta {
 
 	}
 
+	@Override
+	public Planta BuscarPlantaXId(Planta planta) {
+		for (Planta p : plantaDAO.findAll()) {
+	        if (p.getCodigo().equals(planta.getCodigo())) {
+	            return p;
+	        }
+	    }
+	    return null;
+	}
+	
+	@Override
+	public boolean existePlanta(Planta planta) {
+		for(Planta p : plantaDAO.findAll()) {
+			if (planta.getCodigo().equals(p.getCodigo())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public String InsertarPlanta(Planta planta) {
+		if (existePlanta(planta)) {
+			plantaDAO.update(planta);
+			return "Planta actualizada exitosamente";
+		}else {
+			plantaDAO.insert(planta);
+			return "Planta insertada exitosamente";
+		}
+	}
+
+
+
+
+
 }

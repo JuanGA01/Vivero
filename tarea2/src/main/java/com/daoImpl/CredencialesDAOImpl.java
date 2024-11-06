@@ -69,20 +69,22 @@ public class CredencialesDAOImpl implements CredencialesDAO {
 
     // Implementación del método para crear un usuario
     @Override
-    public boolean crearUsuario(String usuario, String password) {
-        String insertUserSql = "INSERT INTO Credenciales (usuario, password) VALUES (?, ?)";
+    public boolean crearUsuario(Long idPersona, String usuario, String password) {
+        String insertUserSql = "INSERT INTO Credenciales (id, usuario, password) VALUES (?, ?, ?)";
 
         try (PreparedStatement insertStatement = connection.prepareStatement(insertUserSql)) {
-            insertStatement.setString(1, usuario);
-            insertStatement.setString(2, password);
+            insertStatement.setLong(1, idPersona);
+            insertStatement.setString(2, usuario);
+            insertStatement.setString(3, password);
             
             int rowsInserted = insertStatement.executeUpdate();
             return rowsInserted > 0;
         } catch (SQLException e) {
             System.out.println("Error al crear el usuario: " + e.getMessage());
         }
-        return false; // Retorna false si ocurre algún error
+        return false;
     }
+
 
    
 }

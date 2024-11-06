@@ -52,5 +52,28 @@ public class ServicioCredencialesImpl implements ServicioCredenciales {
 	    }
 	}
 
+	@Override
+	public Boolean UsuarioExistente(String usuario) {
+		Optional<Credenciales> credencialesOpt = credencialesDao.findByUsuario(usuario);
+	    
+	    // Existe el usuario
+	    if (!credencialesOpt.isPresent()) {
+	        return false;
+	    }else {
+	    	return true;
+	    }
+	}
+
+	@Override
+	public String GuardarCredenciales(Long idPersona, Credenciales credenciales) {
+		if (!UsuarioExistente(credenciales.getUsuario())) {
+			credencialesDao.crearUsuario(idPersona, credenciales.getUsuario(),credenciales.getPassword());
+			return "Credenciales guardadas correctamente";
+		}else {
+			return "Error al guardar las credenciales";
+		}
+		
+	}
+
 	
 }

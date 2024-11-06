@@ -5,11 +5,9 @@ import java.util.List;
 import com.model.Planta;
 
 public interface PlantaDAO {
-	
-    void insert(Planta planta) throws SQLException;
+    boolean insert(Planta planta);
     Planta findById(String codigo) throws SQLException;
     List<Planta> findAll() throws SQLException;
-    void update(Planta planta) throws SQLException;
-    void delete(String codigo) throws SQLException;
-    
+    boolean update(Planta planta);
+    boolean delete(String codigo);
 }

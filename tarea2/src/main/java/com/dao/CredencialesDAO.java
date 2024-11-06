@@ -12,5 +12,5 @@ public interface CredencialesDAO {
     boolean autenticarUsuario(String usuario, String password);
     
     // Método para crear Usuario
-    boolean crearUsuario(String usuario, String password);
+    boolean crearUsuario(Long idPersona, String usuario, String password);
 }
