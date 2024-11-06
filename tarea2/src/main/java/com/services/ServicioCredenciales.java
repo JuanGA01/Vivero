@@ -1,13 +1,8 @@
 package com.services;
 
-import com.model.Credenciales;
-
 public interface ServicioCredenciales {
 	
-	int insertar(Credenciales credenciales);
-
-	int modificar(Credenciales credenciales);
-
-	int eliminar(Credenciales credenciales);
+	String loginUsuario(String usuario, String password);
 	
+	Boolean UsuarioCorrecto(String usuario, String password);
 }

@@ -7,15 +7,7 @@ import java.util.Scanner;
 
 public class Utilities {
 	
-	/**
-     * Función que pide al usuario que introduzca 's' o 'S' para Sí o 'n' o 'N'
-     * para No y devuelve true o false en cada caso. Si el usuario no introduce
-     * ni 's' ni 'S' ni 'n' ni 'N' entonces avisa al usuario y le vuelve a pedir
-     * a que lo introduzca de nuevo.
-     *
-     * @return true si el usuario introduce 's' o 'S'; false si el usuario
-     * introduce 'n' o 'N'
-     */
+
     public static boolean leerBoolean() {
         boolean ret;
         Scanner in;

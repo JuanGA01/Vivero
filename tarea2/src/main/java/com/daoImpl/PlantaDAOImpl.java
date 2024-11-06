@@ -15,9 +15,8 @@ public class PlantaDAOImpl implements PlantaDAO {
         this.connection = connection;
     }
 
-    // Método para listar todas las plantas
     @Override
-    public List<Planta> listarPlantas() {
+    public List<Planta> findAll() {
         List<Planta> plantas = new ArrayList<>();
         String sql = "SELECT codigo, nombrecomun, nombrecientifico FROM Planta";
 
@@ -36,54 +35,53 @@ public class PlantaDAOImpl implements PlantaDAO {
         return plantas;
     }
 
-    // Método para modificar una planta existente
-    @Override
-    public boolean modificarPlanta(Planta planta) {
-        String sql = "UPDATE Planta SET nombrecomun = ?, nombrecientifico = ? WHERE codigo = ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, planta.getNombreComun());
-            preparedStatement.setString(2, planta.getNombreCientifico());
-            preparedStatement.setString(3, planta.getCodigo());
+	@Override
+	public void insert(Planta planta) throws SQLException {
+	    String sql = "INSERT INTO Planta (codigo, nombrecomun, nombrecientifico) VALUES (?, ?, ?)";
+	    try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+	        preparedStatement.setString(1, planta.getCodigo());
+	        preparedStatement.setString(2, planta.getNombreComun());
+	        preparedStatement.setString(3, planta.getNombreCientifico());
+	        preparedStatement.executeUpdate();
+	    }
+	}
 
-            int rowsUpdated = preparedStatement.executeUpdate();
-            return rowsUpdated > 0; // true si al menos una fila fue actualizada
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
+	@Override
+	public Planta findById(String codigo) throws SQLException {
+	    String sql = "SELECT codigo, nombrecomun, nombrecientifico FROM Planta WHERE codigo = ?";
+	    Planta planta = null;
+	    try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+	        preparedStatement.setString(1, codigo);
+	        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+	            if (resultSet.next()) {
+	                String nombreComun = resultSet.getString("nombrecomun");
+	                String nombreCientifico = resultSet.getString("nombrecientifico");
+	                planta = new Planta(codigo, nombreComun, nombreCientifico);
+	            }
+	        }
+	    }
+	    return planta;
+	}
 
-    // Método para crear una nueva planta, validando que el código sea único
-    @Override
-    public boolean crearPlanta(Planta planta) {
-        // Primero verificamos si el código ya existe
-        String checkSql = "SELECT COUNT(*) FROM Planta WHERE codigo = ?";
-        String insertSql = "INSERT INTO Planta (codigo, nombrecomun, nombrecientifico) VALUES (?, ?, ?)";
+	@Override
+	public void update(Planta planta) throws SQLException {
+	    String sql = "UPDATE Planta SET nombrecomun = ?, nombrecientifico = ? WHERE codigo = ?";
+	    try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+	        preparedStatement.setString(1, planta.getNombreComun());
+	        preparedStatement.setString(2, planta.getNombreCientifico());
+	        preparedStatement.setString(3, planta.getCodigo());
+	        preparedStatement.executeUpdate();
+	    }
+	}
 
-        try (PreparedStatement checkStatement = connection.prepareStatement(checkSql)) {
-            checkStatement.setString(1, planta.getCodigo());
-            try (ResultSet resultSet = checkStatement.executeQuery()) {
-                if (resultSet.next() && resultSet.getInt(1) > 0) {
-                    // Si el código ya existe, retornamos false
-                    System.out.println("El código de la planta ya existe.");
-                    return false;
-                }
-            }
+	@Override
+	public void delete(String codigo) throws SQLException {
+	    String sql = "DELETE FROM Planta WHERE codigo = ?";
+	    try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+	        preparedStatement.setString(1, codigo);
+	        preparedStatement.executeUpdate();
+	    }
+	}
 
-            // Si no existe, procedemos a insertar la nueva planta
-            try (PreparedStatement insertStatement = connection.prepareStatement(insertSql)) {
-                insertStatement.setString(1, planta.getCodigo());
-                insertStatement.setString(2, planta.getNombreComun());
-                insertStatement.setString(3, planta.getNombreCientifico());
-
-                int rowsInserted = insertStatement.executeUpdate();
-                return rowsInserted > 0; // true si al menos una fila fue insertada
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
     
 }

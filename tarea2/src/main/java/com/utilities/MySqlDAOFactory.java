@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
-
 import com.dao.CredencialesDAO;
 import com.dao.PlantaDAO;
 import com.daoImpl.CredencialesDAOImpl;
