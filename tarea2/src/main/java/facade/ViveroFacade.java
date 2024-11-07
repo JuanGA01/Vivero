@@ -5,6 +5,7 @@ import com.model.Credenciales;
 import com.model.Persona;
 import com.model.Planta;
 import com.services.ServicioCredenciales;
+import com.services.ServicioEjemplar;
 import com.services.ServicioPersona;
 import com.services.ServicioPlanta;
 import com.utilities.MySqlDAOFactory;
@@ -23,6 +24,7 @@ public class ViveroFacade {
 	ServicioPlanta plantServ = factoriaServicios.getServiciosPlanta();
 	ServicioCredenciales credencialesServ = factoriaServicios.getServiciosCredenciales();
 	ServicioPersona personaServ = factoriaServicios.getServiciosPersona();
+	ServicioEjemplar ejemplarServ = factoriaServicios.getServicioEjemplar();
 
 	
 	public static ViveroFacade getPortal() {
@@ -103,25 +105,35 @@ public class ViveroFacade {
         do {
             System.out.println("\n---- Menu Personal ----");
             System.out.println("1. Ver Plantas");
-            System.out.println("2. Actualizar información de plantas");
-            System.out.println("3. Salir al menú principal");
+            System.out.println("2. Registrar un nuevo ejemplar");
+            System.out.println("3. Filtrar ejemplares por tipo de planta");
+            System.out.println("4. Ver mensajes de seguimiento de un ejemplar");
+            System.out.println("5. Añadir mensajes");
+            System.out.println("6. Salir");
             System.out.print("Seleccione una opción: ");
             option = scanner.nextInt();
             scanner.nextLine();
             
             switch (option) {
                 case 1:
+                	System.out.println(plantServ.listaPlantas());
                     break;
                 case 2:
-                    System.out.println("Funcionalidad de actualización de plantas...");
+                	registrarEjemplar();
                     break;
                 case 3:
+                   
+                    break;
+                case 4:
+                    
+                    break;
+                case 5:
                     System.out.println("Regresando al menú principal...");
                     break;
                 default:
                     System.out.println("Opción inválida. Intente de nuevo.");
             }
-        } while (option != 3);
+        } while (option != 6);
     }
 	
 	//Logueo usuarios
@@ -184,5 +196,19 @@ public class ViveroFacade {
     	planta.setNombreCientifico(scanner.nextLine());
     	System.out.println(plantServ.InsertarPlanta(planta));
     	}
+    
+  //Insertar planta
+    private void registrarEjemplar() {
+    	Planta planta = new Planta();
+    	do {
+    		System.out.println("Introduce el código de la planta: ");
+    		planta = plantServ.BuscarPlantaXId(planta);
+    		if (planta.equals(null)) {
+    			System.out.println("Introduce un código válido");
+    		}
+    	} while (planta.equals(null));
+    	ejemplarServ.registrarNuevoEjemplar(planta);
+    	//Aqui
+    }
     
 }

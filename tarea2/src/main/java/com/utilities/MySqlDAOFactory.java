@@ -7,9 +7,11 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 import com.dao.CredencialesDAO;
+import com.dao.EjemplarDAO;
 import com.dao.PersonaDAO;
 import com.dao.PlantaDAO;
 import com.daoImpl.CredencialesDAOImpl;
+import com.daoImpl.EjemplarDAOImpl;
 import com.daoImpl.PersonaDAOImpl;
 import com.daoImpl.PlantaDAOImpl;
 import com.mysql.cj.jdbc.MysqlDataSource;
@@ -59,8 +61,13 @@ public class MySqlDAOFactory {
 	public PlantaDAO getPlantaDAO() {
 		return new PlantaDAOImpl(connection);
 	}
+	
 	public PersonaDAO getPersonaDAO() {
 		return new PersonaDAOImpl(connection);
+	}
+	
+	public EjemplarDAO getEjemplaresDAO() {
+		return new EjemplarDAOImpl(connection);
 	}
 
 	public static MySqlDAOFactory getCon() {
