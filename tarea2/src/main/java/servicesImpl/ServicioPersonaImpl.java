@@ -44,6 +44,4 @@ public class ServicioPersonaImpl implements ServicioPersona {
 	}
 
 
-
-
 }

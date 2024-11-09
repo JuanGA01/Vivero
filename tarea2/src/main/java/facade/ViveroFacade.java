@@ -1,11 +1,14 @@
 package facade;
 
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 import com.model.Credenciales;
 import com.model.Persona;
 import com.model.Planta;
 import com.services.ServicioCredenciales;
 import com.services.ServicioEjemplar;
+import com.services.ServicioMensaje;
 import com.services.ServicioPersona;
 import com.services.ServicioPlanta;
 import com.utilities.MySqlDAOFactory;
@@ -25,6 +28,7 @@ public class ViveroFacade {
 	ServicioCredenciales credencialesServ = factoriaServicios.getServiciosCredenciales();
 	ServicioPersona personaServ = factoriaServicios.getServiciosPersona();
 	ServicioEjemplar ejemplarServ = factoriaServicios.getServicioEjemplar();
+	ServicioMensaje mensajeServ = factoriaServicios.getServicioMensaje();
 
 	
 	public static ViveroFacade getPortal() {
@@ -100,7 +104,7 @@ public class ViveroFacade {
     }
     
     //Menú para los no administradores
-    private void menuPersonal() {
+    private void menuPersonal(Persona persona) {
         int option;
         do {
             System.out.println("\n---- Menu Personal ----");
@@ -119,13 +123,13 @@ public class ViveroFacade {
                 	System.out.println(plantServ.listaPlantas());
                     break;
                 case 2:
-                	registrarEjemplar();
+                	registrarEjemplar(persona);
                     break;
                 case 3:
-                   
+                	buscarEjemplaresXtipoDePlanta();
                     break;
                 case 4:
-                    
+                	VerMensajesSeguimientoEjemplar();
                     break;
                 case 5:
                     System.out.println("Regresando al menú principal...");
@@ -147,7 +151,7 @@ public class ViveroFacade {
         if(credencialesServ.UsuarioCorrecto(usuario, password) && usuario.equals("admin")) {
         	menuAdmin();
         }else if(credencialesServ.UsuarioCorrecto(usuario, password) && !usuario.equals("admin")){
-        	menuPersonal();
+        	menuPersonal(factoriaDAO.getPersonaDAO().findById(factoriaDAO.getCredencialesDAO().obtenerCredencialesAutenticadas(usuario, password).getId()));
         }
     }
     
@@ -197,18 +201,61 @@ public class ViveroFacade {
     	System.out.println(plantServ.InsertarPlanta(planta));
     	}
     
-  //Insertar planta
-    private void registrarEjemplar() {
+   //Insertar planta
+    private void registrarEjemplar(Persona persona) {
     	Planta planta = new Planta();
+    	System.out.println("Introduce el código de la planta: ");
     	do {
-    		System.out.println("Introduce el código de la planta: ");
+    		 planta = new Planta();
+    		planta.setCodigo(scanner.nextLine());
     		planta = plantServ.BuscarPlantaXId(planta);
-    		if (planta.equals(null)) {
-    			System.out.println("Introduce un código válido");
+    		if (planta == null) {
+    			System.out.println("Introduce un código válido: ");
     		}
-    	} while (planta.equals(null));
-    	ejemplarServ.registrarNuevoEjemplar(planta);
-    	//Aqui
+    	} while (planta == null);
+    	ejemplarServ.registrarNuevoEjemplar(planta , persona);
     }
+    
+    //Buscar ejemplares por tipo de planta
+    private void buscarEjemplaresXtipoDePlanta() {
+    	Set<Planta> plantas = new HashSet<Planta>();
+    	int pls;
+    	System.out.println("Introduce cuantas plantas vas a añadir");
+    	pls = scanner.nextInt();
+		do {
+			Planta planta = new Planta();
+			System.out.println("Introduce el código de la planta: ");
+			do {
+				planta = new Planta();
+				planta.setCodigo(scanner.nextLine());
+				planta = plantServ.BuscarPlantaXId(planta);
+				if (planta == null) {
+					System.out.println("Introduce un código válido: ");
+				}
+			} while (planta == null);
+			plantas.add(planta);
+			pls = pls - 1;
+		} while (pls != 0);
+		System.out.println(ejemplarServ.listarEjemplaresPorTipoDePlanta(plantas));
+    }
+  	
+  	private void VerMensajesSeguimientoEjemplar() {
+  		Long id = (long) 0;
+  		System.out.println();
+  		System.out.println("Ejemplares: ");
+  		System.out.println(ejemplarServ.listarEjemplares());
+  		do {
+  			System.out.println("Introduce la ID del ejemplar: ");
+  			id = scanner.nextLong();
+  			if (!ejemplarServ.existeEjemplar(id)) {
+  				System.out.println("Introduce la ID correcta: ");
+  			}
+  		}while (!ejemplarServ.existeEjemplar(id));
+  		System.out.println();
+  		System.out.println(mensajeServ.buscarMensajeXEjemplar(id));
+  		
+  		
+  	}
+  
     
 }

@@ -11,4 +11,7 @@ public interface PersonaDAO {
 	//Mérodo para listar las personas y sus credenciales
 	List<Persona> findAll();
 	
+	//Método para buscar persona por id
+	Persona findById(Long id);
+	
 }

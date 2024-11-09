@@ -21,13 +21,16 @@ CREATE TABLE Ejemplar (
 
 -- Creación de un evento para actualizar el campo 'nombre' de los ejemplares
 DELIMITER //
-CREATE EVENT actualizar_nombres_ejemplares
-ON SCHEDULE EVERY 1 MINUTE
-DO
-  UPDATE Ejemplar
-  SET nombre = CONCAT(codigo_planta, '_', id)
-  WHERE nombre IS NULL OR nombre = '';//
+CREATE TRIGGER actualizar_nombre_ejemplar
+BEFORE INSERT ON Ejemplar
+FOR EACH ROW
+BEGIN
+  SET NEW.nombre = CONCAT(NEW.codigo_planta, '_', NEW.id);
+END //
 DELIMITER ;
+SET GLOBAL event_scheduler = ON;
+
+
 
 -- Creación de la tabla Persona
 CREATE TABLE Persona (
@@ -71,15 +74,19 @@ INSERT INTO Ejemplar (codigo_planta) VALUES
 ('PL002'), -- Generará nombre: "PL002_2" usando el evento
 ('PL003'); -- Generará nombre: "PL003_3" usando el evento
 
--- Personas
-INSERT INTO Persona (nombre, email) VALUES 
-('Juan García', 'juangarcia@educastur.es'),
-('Luis DBB', 'luisdbb@educastur.es');
+-- Inserta la primera persona y guarda el ID generado en una variable
+INSERT INTO Persona (nombre, email) VALUES ('administrador', 'admin@admin.com');
+SET @id_juan := LAST_INSERT_ID();
 
--- Credenciales
+-- Inserta la segunda persona y guarda el ID generado en otra variable
+INSERT INTO Persona (nombre, email) VALUES ('Luis DBB', 'luisdbb@educastur.es');
+SET @id_luis := LAST_INSERT_ID();
+
+-- Ahora usa las variables para insertar las credenciales con los IDs correctos
 INSERT INTO Credenciales (id, usuario, password) VALUES 
-(1, 'juanga', 'password123'),
-(2, 'luisdbb', 'password1234');
+(@id_juan, 'admin', 'admin123'),
+(@id_luis, 'luisdbb', 'password1234');
+
 
 -- Mensajes (asegurarse de que id_ejemplar y id_persona existan)
 INSERT INTO Mensaje (fechahora, mensaje, id_ejemplar, id_persona) VALUES 

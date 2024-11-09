@@ -13,4 +13,10 @@ public interface CredencialesDAO {
     
     // Método para crear Usuario
     boolean crearUsuario(Long idPersona, String usuario, String password);
+
+    // Método para obtener credenciales
+	Credenciales obtenerCredencialesAutenticadas(String usuario, String password);
+    
+    
+    
 }

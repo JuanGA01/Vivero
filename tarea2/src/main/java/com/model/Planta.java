@@ -1,5 +1,7 @@
 package com.model;
 
+import java.util.Objects;
+
 public class Planta implements Comparable<Planta> {
 	private String codigo;
 	private String nombreComun;
@@ -47,6 +49,24 @@ public class Planta implements Comparable<Planta> {
 	         return this.nombreComun.compareTo(o.nombreComun);
 	      }
 	      else return this.nombreComun.compareTo(o.nombreComun);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(codigo, nombreCientifico, nombreComun);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Planta other = (Planta) obj;
+		return Objects.equals(codigo, other.codigo) && Objects.equals(nombreCientifico, other.nombreCientifico)
+				&& Objects.equals(nombreComun, other.nombreComun);
 	}
 	
 }

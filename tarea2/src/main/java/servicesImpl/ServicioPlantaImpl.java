@@ -1,5 +1,7 @@
 package servicesImpl;
 
+import java.util.List;
+
 import com.daoImpl.PlantaDAOImpl;
 import com.model.Planta;
 import com.services.ServicioPlanta;
@@ -58,9 +60,5 @@ public class ServicioPlantaImpl implements ServicioPlanta {
 			return "Planta insertada exitosamente";
 		}
 	}
-
-
-
-
 
 }

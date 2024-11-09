@@ -12,4 +12,5 @@ public interface ServicioCredenciales {
 	
 	String GuardarCredenciales(Long idPersona, Credenciales credenciales);
 	
+
 }

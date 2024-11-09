@@ -2,10 +2,12 @@ package com.utilities;
 
 import com.services.ServicioCredenciales;
 import com.services.ServicioEjemplar;
+import com.services.ServicioMensaje;
 import com.services.ServicioPersona;
 import com.services.ServicioPlanta;
 import servicesImpl.ServicioCredencialesImpl;
 import servicesImpl.ServicioEjemplarImpl;
+import servicesImpl.ServicioMensajeImpl;
 import servicesImpl.ServicioPersonaImpl;
 import servicesImpl.ServicioPlantaImpl;
 
@@ -30,6 +32,9 @@ public class ViveroServiciosFactory {
 	}
 	public ServicioEjemplar getServicioEjemplar() {
 		return new ServicioEjemplarImpl();
+	}
+	public ServicioMensaje getServicioMensaje() {
+		return new ServicioMensajeImpl();
 	}
 
 }

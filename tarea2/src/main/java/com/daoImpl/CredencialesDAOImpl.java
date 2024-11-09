@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
-
 import com.dao.CredencialesDAO;
 import com.model.Credenciales;
 
@@ -84,7 +83,19 @@ public class CredencialesDAOImpl implements CredencialesDAO {
         }
         return false;
     }
-
-
    
+    @Override
+    public Credenciales obtenerCredencialesAutenticadas(String usuario, String password) {
+        // Primero, autenticamos al usuario
+        if (autenticarUsuario(usuario, password)) {
+            // Si la autenticación es exitosa, obtenemos las credenciales
+            return findByUsuario(usuario).orElseThrow(() -> 
+                new IllegalStateException("Las credenciales no fueron encontradas después de la autenticación.")
+            );
+        }
+        // Si la autenticación falla, lanzamos una excepción
+        throw new SecurityException("Autenticación fallida: usuario o contraseña incorrectos.");
+    }
+
+    
 }
