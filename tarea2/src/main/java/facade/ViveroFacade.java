@@ -1,11 +1,16 @@
 package facade;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
 import com.model.Credenciales;
+import com.model.Ejemplar;
+import com.model.Mensaje;
 import com.model.Persona;
 import com.model.Planta;
+import com.mysql.cj.jdbc.jmx.LoadBalanceConnectionGroupManager;
+import com.mysql.cj.protocol.a.LocalDateTimeValueEncoder;
 import com.services.ServicioCredenciales;
 import com.services.ServicioEjemplar;
 import com.services.ServicioMensaje;
@@ -17,7 +22,7 @@ import com.utilities.ViveroServiciosFactory;
 
 public class ViveroFacade {
 	
-	private static  ViveroFacade portal;
+	private static ViveroFacade portal;
 	Scanner scanner = new Scanner(System.in);
 	
 	MySqlDAOFactory factoriaDAO = MySqlDAOFactory.getCon();
@@ -30,7 +35,7 @@ public class ViveroFacade {
 	ServicioEjemplar ejemplarServ = factoriaServicios.getServicioEjemplar();
 	ServicioMensaje mensajeServ = factoriaServicios.getServicioMensaje();
 
-	
+	//Método para instanciar el portal
 	public static ViveroFacade getPortal() {
 		if (portal==null)
 			portal=new ViveroFacade();
@@ -113,7 +118,8 @@ public class ViveroFacade {
             System.out.println("3. Filtrar ejemplares por tipo de planta");
             System.out.println("4. Ver mensajes de seguimiento de un ejemplar");
             System.out.println("5. Añadir mensajes");
-            System.out.println("6. Salir");
+            System.out.println("6. Ver mensajes");
+            System.out.println("7. Salir");
             System.out.print("Seleccione una opción: ");
             option = scanner.nextInt();
             scanner.nextLine();
@@ -132,14 +138,56 @@ public class ViveroFacade {
                 	VerMensajesSeguimientoEjemplar();
                     break;
                 case 5:
-                    System.out.println("Regresando al menú principal...");
+                	añadirMensajes(persona);
+                	break;
+                case 6:
+                	menuMensajesPersona(persona);
                     break;
+                case 7:
+                	System.out.println("Regresando al menú principal...");
+                	break;
                 default:
                     System.out.println("Opción inválida. Intente de nuevo.");
             }
-        } while (option != 6);
+        } while (option != 7);
     }
 	
+   //Menú para listar mensajes (NO ADMINISTRADORES)
+    private void menuMensajesPersona(Persona persona) {
+        int option;
+        do {
+            System.out.println("\n---- Menu Mensajes ----");
+            System.out.println("1. Ver Mensajes");
+            System.out.println("2. Ver mensajes por persona");
+            System.out.println("3. Ver mensajes por rango de fechas");
+            System.out.println("4. Ver mensajes por tipo específico de planta");
+            System.out.println("5. Salir");
+            System.out.print("Seleccione una opción: ");
+            option = scanner.nextInt();
+            scanner.nextLine();
+            
+            switch (option) {
+                case 1:
+                	System.out.println(mensajeServ.listarTodosMensajes());
+                    break;
+                case 2:
+                	mensajesXPersona();
+                    break;
+                case 3:
+                	mensajesXFechas();
+                    break;
+                case 4:
+                	mensajesXPlanta();
+                    break;
+                case 5:
+                	System.out.println("Regresando al menú principal...");
+                	break;
+                default:
+                    System.out.println("Opción inválida. Intente de nuevo.");
+            }
+        } while (option != 5);
+    }
+
 	//Logueo usuarios
     private void login() {
     	// Pedir al usuario que ingrese su nombre de usuario y contraseña
@@ -254,8 +302,70 @@ public class ViveroFacade {
   		System.out.println();
   		System.out.println(mensajeServ.buscarMensajeXEjemplar(id));
   		
-  		
   	}
-  
+  	
+  	//Método para añadir mensajes
+	private void añadirMensajes(Persona persona) {
+		Mensaje mensaje = new Mensaje();
+		Ejemplar ejemplar = new Ejemplar();
+		do {
+  			System.out.println("Introduce la ID del ejemplar: ");
+  			ejemplar.setId(scanner.nextLong());
+  			scanner.nextLine(); 
+  			if (!ejemplarServ.existeEjemplar(ejemplar.getId())) {
+  				System.out.println("Introduce la ID correcta: ");
+  			}
+  		}while (!ejemplarServ.existeEjemplar(ejemplar.getId()));
+		System.out.println("Introduce el mensaje a almacenar: ");
+		mensaje.setMensaje(scanner.nextLine());
+		mensaje.setFechahora(LocalDateTime.now());
+		System.out.println(mensajeServ.crearMensaje(persona, ejemplar, mensaje));
+		
+	}
+
+	
+	private void mensajesXPlanta() {
+		Planta planta;
+		System.out.println("Introduce el código de la planta de la que quieres ver sus mensajes: ");
+		do {
+			planta = new Planta();
+			planta.setCodigo(scanner.nextLine());
+			planta = plantServ.BuscarPlantaXId(planta);
+			if (planta == null) {
+				System.out.println("Introduce un código válido: ");
+			}
+		} while (planta == null);
+		System.out.println("Mensajes relativos a la planta " + planta.getNombreComun());
+		System.out.println(mensajeServ.listarXTipoPlanta(planta));
+	
+}
+
+	private void mensajesXFechas() {
+		System.out.println("Introduce la primera fecha: ");
+		LocalDateTime fecha1 = Utilities.pedirFechaHora(scanner.nextLine(), scanner);
+		System.out.println("Introduce segunda fecha: ");
+		LocalDateTime fecha2 = Utilities.pedirFechaHora(scanner.nextLine(), scanner);
+		System.out.println("Mensajes relativos acontecidos entre esas fechas: ");
+		if (fecha1.isBefore(fecha2)) {
+			System.out.println(mensajeServ.listarXRangoFechas(fecha1, fecha2));
+		}else {
+			System.out.println(mensajeServ.listarXRangoFechas(fecha2, fecha1));
+		}
+	}
+
+	private void mensajesXPersona() {
+		Persona persona = new Persona();
+		System.out.println("Introduce el código de la persona de la que quieres ver sus mensajes: ");
+		do {
+			persona.setId(scanner.nextLong());
+			scanner.nextLine();
+			persona = factoriaDAO.getPersonaDAO().findById(persona.getId());
+			if (persona == null) {
+				System.out.println("Introduce un código válido: ");
+			}
+		} while (persona == null);
+		System.out.println("Mensajes relativos a " + persona.getNombre());
+		System.out.println(mensajeServ.listarXPersona(persona));
+	}
     
 }

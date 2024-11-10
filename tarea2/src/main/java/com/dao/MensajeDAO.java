@@ -1,10 +1,12 @@
 package com.dao;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.TreeMap;
 import com.model.Ejemplar;
 import com.model.Mensaje;
 import com.model.Persona;
+import com.model.Planta;
 
 public interface MensajeDAO {
 	
@@ -19,4 +21,10 @@ public interface MensajeDAO {
     boolean eliminarMensaje(Long id);
     
     TreeMap<Mensaje, Persona> buscarMensajeXEjemplar(Long ejemplarId);
+
+	List<Mensaje> obtenerMensajesPorPersona(Persona persona);
+
+	List<Mensaje> obtenerMensajesPorRangoFechas(LocalDateTime desde, LocalDateTime hasta);
+
+	List<Mensaje> obtenerMensajesPorTipoCodigoPlanta(Planta planta);
 }

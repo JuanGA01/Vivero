@@ -1,15 +1,26 @@
 package com.services;
 
-import com.model.Credenciales;
+import java.time.LocalDateTime;
+
 import com.model.Ejemplar;
 import com.model.Mensaje;
+import com.model.Persona;
+import com.model.Planta;
 
 public interface ServicioMensaje {
 
-	boolean crearMensaje (Credenciales credenciales, Ejemplar ejemplar, Mensaje mensaje);
+	String crearMensaje (Persona persona, Ejemplar ejemplar, Mensaje mensaje);
 	
 	Mensaje VerMensajesDeSeguimientoEjemplar (Ejemplar ejemplar);
 	
 	String buscarMensajeXEjemplar(Long id);
+	
+	String listarTodosMensajes();
+	
+	String listarXPersona(Persona persona);
+	
+	String listarXRangoFechas(LocalDateTime desde, LocalDateTime hasta);
+	
+	String listarXTipoPlanta(Planta planta);
 	
 }

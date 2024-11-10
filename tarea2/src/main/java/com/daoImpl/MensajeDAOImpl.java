@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -14,6 +15,7 @@ import com.dao.MensajeDAO;
 import com.model.Ejemplar;
 import com.model.Mensaje;
 import com.model.Persona;
+import com.model.Planta;
 
 public class MensajeDAOImpl implements MensajeDAO {
     private Connection connection;
@@ -168,7 +170,84 @@ public class MensajeDAOImpl implements MensajeDAO {
         return mensajesConPersonas; // Retornamos el TreeMap de mensajes con sus respectivas personas, ordenados por fecha
     }
 
+    @Override
+    public List<Mensaje> obtenerMensajesPorPersona(Persona persona) {
+        List<Mensaje> mensajes = new ArrayList<>();
+        String sql = "SELECT id, fechahora, mensaje FROM Mensaje WHERE id_persona = ?";
 
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setLong(1, persona.getId());
 
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    Mensaje mensaje = new Mensaje(
+                        resultSet.getLong("id"),
+                        resultSet.getTimestamp("fechahora").toLocalDateTime(),
+                        resultSet.getString("mensaje")
+                    );
+                    mensajes.add(mensaje);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al obtener los mensajes por persona: " + e.getMessage());
+        }
+
+        return mensajes;
+    }
+
+    @Override
+    public List<Mensaje> obtenerMensajesPorRangoFechas(LocalDateTime desde, LocalDateTime hasta) {
+        List<Mensaje> mensajes = new ArrayList<>();
+        String sql = "SELECT id, fechahora, mensaje FROM Mensaje WHERE fechahora BETWEEN ? AND ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setTimestamp(1, Timestamp.valueOf(desde));
+            preparedStatement.setTimestamp(2, Timestamp.valueOf(hasta));
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    Mensaje mensaje = new Mensaje(
+                        resultSet.getLong("id"),
+                        resultSet.getTimestamp("fechahora").toLocalDateTime(),
+                        resultSet.getString("mensaje")
+                    );
+                    mensajes.add(mensaje);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al obtener los mensajes por rango de fechas: " + e.getMessage());
+        }
+
+        return mensajes;
+    }
+
+    @Override
+    public List<Mensaje> obtenerMensajesPorTipoCodigoPlanta(Planta planta) {
+        List<Mensaje> mensajes = new ArrayList<>();
+        String sql = "SELECT m.id, m.fechahora, m.mensaje " +
+                     "FROM Mensaje m " +
+                     "JOIN Ejemplar e ON m.id_ejemplar = e.id " +
+                     "JOIN Planta p ON e.codigo_planta = p.codigo " +  // Usamos `codigo` en vez de `tipo`
+                     "WHERE p.codigo = ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, planta.getCodigo());  // Usamos `getCodigo()` en vez de `getTipo`
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    Mensaje mensaje = new Mensaje(
+                        resultSet.getLong("id"),
+                        resultSet.getTimestamp("fechahora").toLocalDateTime(),
+                        resultSet.getString("mensaje")
+                    );
+                    mensajes.add(mensaje);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al obtener mensajes por código de planta: " + e.getMessage());
+        }
+
+        return mensajes;
+    }
 
 }

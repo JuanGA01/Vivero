@@ -1,12 +1,14 @@
 package servicesImpl;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import com.daoImpl.MensajeDAOImpl;
-import com.model.Credenciales;
 import com.model.Ejemplar;
 import com.model.Mensaje;
 import com.model.Persona;
+import com.model.Planta;
 import com.services.ServicioMensaje;
 import com.utilities.MySqlDAOFactory;
 
@@ -21,9 +23,12 @@ public class ServicioMensajeImpl implements ServicioMensaje {
 	}
 
 	@Override
-	public boolean crearMensaje(Credenciales credenciales, Ejemplar ejemplar, Mensaje mensaje) {
-		// TODO Auto-generated method stub
-		return false;
+	public String crearMensaje(Persona persona, Ejemplar ejemplar, Mensaje mensaje) {
+		if (mensajeDAO.insertarMensaje(mensaje, ejemplar, persona)) {
+			return "Mensaje guardado";
+		}else {
+			return "A habido un error al guardar el mensaje";
+		}
 	}
 
 	@Override
@@ -61,6 +66,67 @@ public class ServicioMensajeImpl implements ServicioMensaje {
 		return result;
 
 	}
+
+	@Override
+	public String listarTodosMensajes() {
+	    List<Mensaje> mensajes = mensajeDAO.obtenerTodosLosMensajes();
+	    StringBuilder sb = new StringBuilder();
+
+	    for (Mensaje mensaje : mensajes) {
+	        sb.append("ID: ").append(mensaje.getId()).append("\n");
+	        sb.append("Fecha y Hora: ").append(mensaje.getFechahora()).append("\n");
+	        sb.append("Mensaje: ").append(mensaje.getMensaje()).append("\n");
+	        sb.append("------------------------------------------------------\n");
+	    }
+
+	    return sb.toString();
+	}
+
+	@Override
+	public String listarXPersona(Persona persona) {
+	    List<Mensaje> mensajes = mensajeDAO.obtenerMensajesPorPersona(persona);
+	    StringBuilder sb = new StringBuilder();
+
+	    for (Mensaje mensaje : mensajes) {
+	        sb.append("ID: ").append(mensaje.getId()).append("\n");
+	        sb.append("Fecha y Hora: ").append(mensaje.getFechahora()).append("\n");
+	        sb.append("Mensaje: ").append(mensaje.getMensaje()).append("\n");
+	        sb.append("------------------------------------------------------\n");
+	    }
+
+	    return sb.toString();
+	}
+
+	@Override
+	public String listarXRangoFechas(LocalDateTime desde, LocalDateTime hasta) {
+	    List<Mensaje> mensajes = mensajeDAO.obtenerMensajesPorRangoFechas(desde, hasta);
+	    StringBuilder sb = new StringBuilder();
+
+	    for (Mensaje mensaje : mensajes) {
+	        sb.append("ID: ").append(mensaje.getId()).append("\n");
+	        sb.append("Fecha y Hora: ").append(mensaje.getFechahora()).append("\n");
+	        sb.append("Mensaje: ").append(mensaje.getMensaje()).append("\n");
+	        sb.append("------------------------------------------------------\n");
+	    }
+
+	    return sb.toString();
+	}
+
+	@Override
+	public String listarXTipoPlanta(Planta planta) {
+	    List<Mensaje> mensajes = mensajeDAO.obtenerMensajesPorTipoCodigoPlanta(planta);
+	    StringBuilder resultado = new StringBuilder();
+
+	    for (Mensaje mensaje : mensajes) {
+	        resultado.append("ID: ").append(mensaje.getId()).append("\n")
+	                 .append("Fecha y Hora: ").append(mensaje.getFechahora()).append("\n")
+	                 .append("Mensaje: ").append(mensaje.getMensaje()).append("\n")
+	                 .append("------------------------------------------------------\n");
+	    }
+
+	    return resultado.toString();
+	}
+
 
 
 }
