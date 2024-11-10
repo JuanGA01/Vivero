@@ -25,9 +25,10 @@ CREATE TRIGGER actualizar_nombre_ejemplar
 BEFORE INSERT ON Ejemplar
 FOR EACH ROW
 BEGIN
-  SET NEW.nombre = CONCAT(NEW.codigo_planta, '_', NEW.id);
+  SET NEW.nombre = CONCAT(NEW.codigo_planta, '_', (SELECT IFNULL(MAX(id), 0) + 1 FROM Ejemplar));
 END //
 DELIMITER ;
+
 SET GLOBAL event_scheduler = ON;
 
 
@@ -78,17 +79,12 @@ INSERT INTO Ejemplar (codigo_planta) VALUES
 INSERT INTO Persona (nombre, email) VALUES ('administrador', 'admin@admin.com');
 SET @id_juan := LAST_INSERT_ID();
 
--- Inserta la segunda persona y guarda el ID generado en otra variable
-INSERT INTO Persona (nombre, email) VALUES ('Luis DBB', 'luisdbb@educastur.es');
-SET @id_luis := LAST_INSERT_ID();
-
--- Ahora usa las variables para insertar las credenciales con los IDs correctos
+-- Ahora usa las variables para insertar las credenciales encriptadas,con los IDs correctos, que son admin y admin123 encriptados
 INSERT INTO Credenciales (id, usuario, password) VALUES 
-(@id_juan, 'admin', 'admin123'),
-(@id_luis, 'luisdbb', 'password1234');
+(@id_juan, 'euLUpj0cPhoYeh/Yn0ce9Q==', 'NUKUms5zgbOo4lX1wqZ9eQ==');
 
 
 -- Mensajes (asegurarse de que id_ejemplar y id_persona existan)
 INSERT INTO Mensaje (fechahora, mensaje, id_ejemplar, id_persona) VALUES 
 ('2024-10-24 10:30:00', 'El ejemplar está en buen estado', 1, 1),
-('2024-10-24 11:00:00', 'El ejemplar necesita más agua', 2, 2);
+('2024-10-24 11:00:00', 'El ejemplar necesita más agua', 2, 1);

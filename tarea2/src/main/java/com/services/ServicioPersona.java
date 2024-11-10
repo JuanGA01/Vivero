@@ -4,8 +4,10 @@ import com.model.Persona;
 
 public interface ServicioPersona {
 
-	Boolean CorreoExistente(Persona persona);
-	
-	Long GuardarPersona(Persona persona);
-	
+    // Verifica si el correo de la persona ya existe en el sistema.
+    Boolean CorreoExistente(Persona persona);
+
+    // Guarda una nueva persona en el sistema y devuelve su ID.
+    Long GuardarPersona(Persona persona);
+
 }

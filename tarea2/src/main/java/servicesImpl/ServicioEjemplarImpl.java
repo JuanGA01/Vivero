@@ -30,7 +30,7 @@ public class ServicioEjemplarImpl implements ServicioEjemplar {
     	Mensaje mensaje = new Mensaje();
     	mensaje.setFechahora(LocalDateTime.now());
     	Ejemplar ejemplar = ejemplarDAO.registrarEjemplar(planta);
-    	mensaje.setMensaje("El usuario " + persona.getCrecenciales().getUsuario() + "creo un nuevo ejemplar en la fecha: " + mensaje.getFechahora());
+    	mensaje.setMensaje(persona.getNombre() + " creo un nuevo ejemplar en la fecha: " + mensaje.getFechahora().toString());
         return mensajeDAO.insertarMensaje( mensaje, ejemplar, persona);
 
     }
