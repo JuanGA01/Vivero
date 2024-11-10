@@ -81,7 +81,7 @@ SET @id_juan := LAST_INSERT_ID();
 
 -- Ahora usa las variables para insertar las credenciales encriptadas,con los IDs correctos, que son admin y admin123 encriptados
 INSERT INTO Credenciales (id, usuario, password) VALUES 
-(@id_juan, 'euLUpj0cPhoYeh/Yn0ce9Q==', 'NUKUms5zgbOo4lX1wqZ9eQ==');
+(@id_juan, 'euLUpj0cPhoYeh/Yn0ce9Q==', 'euLUpj0cPhoYeh/Yn0ce9Q==');
 
 
 -- Mensajes (asegurarse de que id_ejemplar y id_persona existan)
