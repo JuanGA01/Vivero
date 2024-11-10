@@ -57,6 +57,7 @@ public class ServicioPlantaImpl implements ServicioPlanta {
 			plantaDAO.insert(planta);
 			return "Planta insertada exitosamente";
 		}
+		
 	}
 
 }
